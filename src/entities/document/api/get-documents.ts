@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/shared/api/axios-instance";
-import type { Document } from "../model/types";
+import type { ListDocumentsParams, PaginatedDocuments } from "../model/types";
 
-// GET /documents — backend returns all documents ordered by createdAt desc
-export async function getDocuments(): Promise<Document[]> {
-  const { data } = await axiosInstance.get<Document[]>("/documents");
+// GET /documents?search=&page=&limit= — paginated, ordered by createdAt desc
+export async function getDocuments(params: ListDocumentsParams = {}): Promise<PaginatedDocuments> {
+  const { data } = await axiosInstance.get<PaginatedDocuments>("/documents", { params });
   return data;
 }

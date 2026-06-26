@@ -3,28 +3,22 @@
 import type { AxiosError } from "axios";
 import Link from "next/link";
 import { FileText } from "lucide-react";
-import { Badge, type badgeVariants } from "@/shared/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { PermissionDeniedState } from "@/shared/ui/permission-denied-state";
 import { ServerErrorState } from "@/shared/ui/server-error-state";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { useDocuments } from "@/entities/document";
-import type { VariantProps } from "class-variance-authority";
-
-const STATUS_VARIANT: Record<string, VariantProps<typeof badgeVariants>["variant"]> = {
-  ready: "success",
-  processing: "warning",
-  failed: "destructive",
-};
+import { DOCUMENT_STATUS_LABEL, DOCUMENT_STATUS_VARIANT, useDocuments } from "@/entities/document";
 
 interface DocumentListProps {
   limit?: number;
 }
 
 export function DocumentList({ limit }: DocumentListProps) {
-  const { data: documents = [], isLoading, isError, error, refetch } = useDocuments();
+  const { data, isLoading, isError, error, refetch } = useDocuments({ limit });
+  const documents = data?.items ?? [];
   const status = (error as AxiosError | null)?.response?.status;
 
   return (
@@ -55,10 +49,12 @@ export function DocumentList({ limit }: DocumentListProps) {
 
         {!isLoading && !isError && documents.length > 0 && (
           <ul className="divide-border divide-y">
-            {documents.slice(0, limit).map((document) => (
+            {documents.map((document) => (
               <li key={document.id} className="flex items-center justify-between gap-2 py-2.5 text-sm">
                 <span className="text-foreground truncate">{document.fileName}</span>
-                <Badge variant={STATUS_VARIANT[document.status] ?? "secondary"}>{document.status}</Badge>
+                <Badge variant={DOCUMENT_STATUS_VARIANT[document.status] ?? "secondary"}>
+                  {DOCUMENT_STATUS_LABEL[document.status] ?? document.status}
+                </Badge>
               </li>
             ))}
           </ul>

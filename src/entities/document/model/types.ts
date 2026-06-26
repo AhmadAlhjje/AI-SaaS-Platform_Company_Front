@@ -6,3 +6,16 @@ export interface Document {
   status: string;
   createdAt: string;
 }
+
+export interface PaginatedDocuments {
+  items: Document[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface ListDocumentsParams {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
