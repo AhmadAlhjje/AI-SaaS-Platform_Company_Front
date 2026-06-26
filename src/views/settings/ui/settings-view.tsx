@@ -1,4 +1,5 @@
 import { AiSettingsSection } from "./ai-settings-section";
+import { CompanyProfileSection } from "./company-profile-section";
 
 export function SettingsView() {
   return (
@@ -7,6 +8,7 @@ export function SettingsView() {
         <h1 className="text-foreground text-2xl font-bold">الإعدادات</h1>
         <p className="text-muted-foreground mt-2 text-sm">إعدادات الشركة والاشتراك.</p>
       </div>
+      <CompanyProfileSection />
       <AiSettingsSection />
     </div>
   );

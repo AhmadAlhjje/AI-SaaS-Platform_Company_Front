@@ -1,2 +1,2 @@
-export type { Company } from "./model/types";
+export type { Company, UpdateCompanyProfileInput } from "./model/types";
 export { useCompany } from "./model/use-company";
