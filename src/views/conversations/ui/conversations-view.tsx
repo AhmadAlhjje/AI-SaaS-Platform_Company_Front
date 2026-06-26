@@ -17,6 +17,12 @@ export function ConversationsView() {
   const selectedConversation =
     conversations?.find((conversation) => conversation.id === effectiveConversationId) ?? null;
 
+  function handleConversationDeleted(conversationId: string) {
+    if (effectiveConversationId === conversationId) {
+      setSelectedConversationId(null);
+    }
+  }
+
   return (
     <div className="flex h-[calc(100vh-5.5rem)] flex-col gap-4 lg:h-[calc(100vh-6.5rem)]">
       <div>
@@ -25,7 +31,11 @@ export function ConversationsView() {
       </div>
 
       <div className="flex flex-1 gap-4 overflow-hidden">
-        <ConversationSidebar selectedConversationId={effectiveConversationId} onSelect={setSelectedConversationId} />
+        <ConversationSidebar
+          selectedConversationId={effectiveConversationId}
+          onSelect={setSelectedConversationId}
+          onDeleted={handleConversationDeleted}
+        />
 
         {selectedConversation ? (
           <ChatPanel
