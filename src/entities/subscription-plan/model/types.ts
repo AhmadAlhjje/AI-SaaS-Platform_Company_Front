@@ -17,3 +17,13 @@ export interface MySubscription {
   endDate: string | null;
   plan: Plan;
 }
+
+export interface UsageSummaryResource {
+  used: number;
+  limit: number;
+}
+
+export interface UsageSummary {
+  documents: UsageSummaryResource;
+  dataTables: UsageSummaryResource;
+}
