@@ -1,108 +1,135 @@
-# Frontend Architecture — Foundation (Stage 1)
+# Frontend Architecture — Foundation (Stage 1) + FSD Migration
 
 > هذا الملف يشرح **ما تم بناؤه فعلياً** في مرحلة التأسيس (Foundation)، وأين يجد أي مطور جديد كل قطعة، وكيف يلتزم بقواعد [ROLE.md](ROLE.md) و[COLORS.md](COLORS.md) عند إضافة أي كود جديد.
+>
+> **تحديث مهم:** تم نقل المشروع من "Feature-Based Architecture" إلى **Feature-Sliced Design (FSD)** (انظر [ROLE.md §3](ROLE.md)). كل ما كان موجوداً وقتها (`modules/*` فارغة بالكامل، بدون كود حقيقي) أُعيد توزيعه على الطبقات الجديدة: `app/providers`, `views`, `widgets`, `features`, `entities`, `shared`. الكود الحقيقي القائم (Sidebar/Navbar/Auth/Axios/Providers) أُعيد تنظيمه بالكامل ضمن هذه الهجرة، وتم التحقق من نجاح `tsc --noEmit` و`pnpm lint` و`pnpm build` بعدها.
 
 ---
 
-## 1. ما تم إنجازه في هذه المرحلة
+## 1. ما تم إنجازه
 
-| المهمة                                                        | الحالة | أين                                                 |
-| ------------------------------------------------------------- | ------ | --------------------------------------------------- |
-| مشروع Next.js (App Router, TS Strict)                         | ✅     | جذر `frontend/`                                     |
-| pnpm + كل المكتبات (RHF, Zod, Zustand, TanStack Query, Axios) | ✅     | `package.json`                                      |
-| Tailwind CSS v4 + shadcn/ui (style: base-nova, RTL)           | ✅     | `components.json`, `src/app/globals.css`            |
-| ESLint + Prettier (+ قاعدة منع `any`)                         | ✅     | `eslint.config.mjs`, `.prettierrc.json`             |
-| نظام الألوان (Light/Dark)                                     | ✅     | [COLORS.md](COLORS.md) + `globals.css`              |
-| RTL + خط عربي (Vazirmatn)                                     | ✅     | `src/app/layout.tsx`                                |
-| Axios + Interceptors                                          | ✅     | `src/infrastructure/api/`                           |
-| TanStack Query Client                                         | ✅     | `src/infrastructure/query/query-client.ts`          |
-| Zustand (مثال: Sidebar UI state)                              | ✅     | `src/shared/hooks/use-sidebar-store.ts`             |
-| Middleware لحماية المسارات                                    | ✅     | `src/middleware.ts`                                 |
-| Layout رئيسي + Sidebar + Navbar                               | ✅     | `src/app/(protected)/`                              |
-| Toast (sonner)                                                | ✅     | `src/shared/ui/sonner.tsx` + مُفعّل في `layout.tsx` |
-| Loading / Error Pages                                         | ✅     | كل route segment (انظر §4)                          |
+| المهمة                                                        | الحالة | أين                                                                         |
+| ------------------------------------------------------------- | ------ | --------------------------------------------------------------------------- |
+| مشروع Next.js (App Router, TS Strict)                         | ✅     | جذر `frontend/`                                                             |
+| pnpm + كل المكتبات (RHF, Zod, Zustand, TanStack Query, Axios) | ✅     | `package.json`                                                              |
+| Tailwind CSS v4 + shadcn/ui (style: base-nova, RTL)           | ✅     | `components.json`, `src/app/globals.css`                                    |
+| ESLint + Prettier (+ قاعدة منع `any`)                         | ✅     | `eslint.config.mjs`, `.prettierrc.json`                                     |
+| نظام الألوان (Light/Dark)                                     | ✅     | [COLORS.md](COLORS.md) + `globals.css`                                      |
+| RTL + خط عربي (Vazirmatn)                                     | ✅     | `src/app/layout.tsx`                                                        |
+| Axios + Interceptors                                          | ✅     | `src/shared/api/`                                                           |
+| TanStack Query Client                                         | ✅     | `src/shared/api/query-client.ts`                                            |
+| Zustand (مثال: Sidebar UI state)                              | ✅     | `src/shared/hooks/use-sidebar-store.ts`                                     |
+| Middleware لحماية المسارات                                    | ✅     | `src/middleware.ts`                                                         |
+| Layout رئيسي + Sidebar + Navbar (Widgets)                     | ✅     | `src/widgets/sidebar`, `src/widgets/navbar`                                 |
+| Toast (sonner)                                                | ✅     | `src/shared/ui/sonner.tsx` + مُفعّل في `layout.tsx`                         |
+| Loading / Error Pages                                         | ✅     | كل route segment (انظر §5)                                                  |
+| **هجرة Feature-Based → Feature-Sliced Design**                | ✅     | `entities/`, `features/`, `widgets/`, `views/`, `shared/`, `app/providers/` |
 
-> **ملاحظة:** لا يوجد بعد أي Module مبني فعلياً (`auth`, `documents`...) — هذه المرحلة هي الأساس (Shell) فقط. صفحات `/login`, `/dashboard`, `/documents`, `/conversations`, `/settings` تحتوي حالياً على محتوى Placeholder بانتظار بناء كل Module حسب خارطة الطريق.
+> **ملاحظة:** لا يوجد بعد أي Feature/Entity مبني بمنطق أعمال حقيقي (`login`, `upload-document`...) — هذه المرحلة هي الأساس (Shell) فقط، موزّعة على طبقات FSD الصحيحة. صفحات `/login`, `/dashboard`, `/documents`, `/conversations`, `/settings` تستهلك حالياً `views/*` بمحتوى Placeholder بانتظار بناء كل Feature/Entity حسب خارطة الطريق ([ROLE.md §26 Feature Lifecycle](ROLE.md)).
 
 ---
 
-## 2. شجرة المشروع الفعلية
+## 2. شجرة المشروع الفعلية (FSD)
 
 ```text
 frontend/
-├── ROLE.md                  ← القواعد الرسمية (ثابتة)
+├── ROLE.md                  ← القواعد الرسمية (FSD)
 ├── COLORS.md                ← نظام الألوان الرسمي
 ├── ARCHITECTURE.md          ← هذا الملف
 ├── components.json          ← إعدادات shadcn/ui (aliases → shared/*)
 ├── src/
-│   ├── app/
-│   │   ├── layout.tsx        ← Root layout: خطوط، RTL، Providers، Toaster
-│   │   ├── page.tsx          ← يحوّل "/" إلى "/dashboard"
+│   ├── app/                          # Routing فقط (Next.js)
+│   │   ├── layout.tsx                 ← Root layout: خطوط، RTL، Providers، Toaster
+│   │   ├── page.tsx                   ← يحوّل "/" إلى "/dashboard"
 │   │   ├── loading.tsx / global-error.tsx
-│   │   ├── login/             ← Layout مستقل بدون Sidebar
-│   │   └── (protected)/       ← Route Group: كل الصفحات المحمية
-│   │       ├── layout.tsx     ← Sidebar + Navbar + main
-│   │       ├── loading.tsx / error.tsx   ← يغطّيان كل الصفحات الفرعية
-│   │       ├── _components/   ← sidebar.tsx, navbar.tsx (خاصة بهذا الـ Layout فقط)
-│   │       ├── dashboard/page.tsx
-│   │       ├── documents/page.tsx
-│   │       ├── conversations/page.tsx
-│   │       └── settings/page.tsx
-│   ├── modules/                ← فارغة حالياً (auth, company, documents, conversations, ai, subscriptions, settings)
-│   ├── shared/
-│   │   ├── ui/                 ← مكونات shadcn (button, sonner, sheet...)
-│   │   ├── hooks/               ← use-sidebar-store.ts
+│   │   ├── providers/                 ← تجميع Providers (يعتمد على entities/user — لذلك هو هنا لا في shared، انظر ROLE.md §4.1)
+│   │   │   ├── providers.tsx           ← التركيب: I18n → Theme → Query → Auth
+│   │   │   ├── auth-provider/          ← useAuth() عبر React Query (يستهلك entities/user)
+│   │   │   ├── query-provider/
+│   │   │   ├── theme-provider/         ← next-themes (light/dark/system)
+│   │   │   └── i18n-provider/          ← useI18n() (ar/rtl ثابت حالياً)
+│   │   ├── login/                      ← Layout مستقل بدون Sidebar → يستهلك views/login
+│   │   └── (protected)/                ← Route Group: كل الصفحات المحمية
+│   │       ├── layout.tsx              ← يستهلك widgets/sidebar + widgets/navbar
+│   │       ├── loading.tsx / error.tsx ← يغطّيان كل الصفحات الفرعية
+│   │       ├── dashboard/page.tsx      ← يستهلك views/dashboard
+│   │       ├── documents/page.tsx      ← يستهلك views/documents
+│   │       ├── conversations/page.tsx  ← يستهلك views/conversations
+│   │       └── settings/page.tsx       ← يستهلك views/settings
+│   ├── views/                  # تجميع كل صفحة (Composition فقط، بدون Business Logic)
+│   │   ├── login/ui/login-view.tsx
+│   │   ├── dashboard/ui/dashboard-view.tsx
+│   │   ├── documents/ui/documents-view.tsx
+│   │   ├── conversations/ui/conversations-view.tsx
+│   │   └── settings/ui/settings-view.tsx
+│   ├── widgets/                # تجميعات مرئية مركّبة بين أكثر من View
+│   │   ├── sidebar/ui/sidebar.tsx
+│   │   ├── navbar/ui/navbar.tsx           ← يستهلك features/logout
+│   │   ├── document-list/                 ← (فارغ حالياً، بانتظار modules/documents)
+│   │   ├── conversation-panel/            ← (فارغ حالياً)
+│   │   └── usage-summary/                 ← (فارغ حالياً)
+│   ├── features/               # أفعال/تفاعلات المستخدم
+│   │   ├── logout/model/use-logout.ts     ← Hook حقيقي يستهلكه navbar
+│   │   ├── login/ / register/             ← (فارغ، بانتظار البناء)
+│   │   ├── upload-document/ / delete-document/
+│   │   ├── send-message/
+│   │   ├── change-plan/
+│   │   ├── update-company-profile/
+│   │   └── update-settings/
+│   ├── entities/                # الكيانات التجارية
+│   │   ├── user/                          ← Entity حقيقي: AuthenticatedUser + getCurrentUser()
+│   │   ├── company/ / document/ / conversation/ / message/
+│   │   ├── subscription-plan/ / ai-model/
+│   ├── shared/                  # Kit عام، لا يعرف أي Entity/Feature
+│   │   ├── ui/                  ← مكونات shadcn (button, sonner, sheet, avatar, dropdown-menu...)
+│   │   ├── hooks/                ← use-sidebar-store.ts (مشترك بين widgets/sidebar و widgets/navbar)
 │   │   ├── lib/utils.ts
-│   │   ├── constants/nav-items.ts
-│   │   ├── types/ / validations/   ← فارغة حالياً، تُعبّأ مع كل Module
-│   ├── infrastructure/
-│   │   ├── api/axios-instance.ts, interceptors.ts
-│   │   ├── auth/session.types.ts, get-current-user.ts
-│   │   ├── query/query-client.ts
-│   │   └── websocket/ / storage/   ← فارغة حالياً
-│   ├── providers/
-│   │   ├── providers.tsx         ← التركيب: I18n → Theme → Query → Auth
-│   │   ├── query-provider/
-│   │   ├── theme-provider/        ← next-themes (light/dark/system)
-│   │   ├── auth-provider/         ← useAuth() عبر React Query (`GET /auth/me`)
-│   │   └── i18n-provider/         ← useI18n() (ar/rtl ثابت حالياً)
-│   └── middleware.ts            ← يحمي كل المسارات إلا /login
+│   │   ├── api/                  ← axios-instance.ts, interceptors.ts, query-client.ts
+│   │   ├── auth/session.types.ts ← فقط ACCESS_TOKEN_COOKIE (بدون Type كيان — ذلك في entities/user)
+│   │   ├── config/nav-items.ts
+│   │   ├── types/ / storage/ / websocket/   ← فارغة حالياً
+│   └── middleware.ts             ← يحمي كل المسارات إلا /login (يستورد من shared/auth فقط)
 ```
 
 ---
 
-## 3. كيف يعمل التوثيق (Auth Shell)
+## 3. لماذا Providers في `app/providers` لا `shared/providers`؟
 
-- **لا يوجد Auth Module حقيقي بعد.** الموجود الآن هو فقط البنية التي ستستخدمها وحدة `modules/auth` مستقبلاً:
-  - `infrastructure/auth/session.types.ts` → نوع `AuthenticatedUser` + اسم الكوكي `access_token`.
-  - `infrastructure/auth/get-current-user.ts` → ينادي `GET /auth/me` عبر Axios.
-  - `providers/auth-provider` → يستهلك الدالة أعلاه عبر `useQuery` ويوفر `useAuth()`.
-  - `middleware.ts` → يتحقق فقط من **وجود** كوكي `access_token` (UX redirect سريع) — التحقق الحقيقي من الصلاحية يبقى من مسؤولية Backend دائماً (انظر [ROLE.md §11](ROLE.md)).
-- تسجيل الدخول/الخروج الفعلي (Forms + Zod + Mutations) يُبنى لاحقاً داخل `modules/auth` حسب خارطة الطريق، وسيستهلك نفس `axios-instance` و`AuthProvider` الموجودين.
+قاعدة الطبقات الذهبية في FSD ([ROLE.md §3.2](ROLE.md)): `shared` هو أدنى طبقة، ولا يجوز له معرفة أي شيء عن `entities`. لكن `auth-provider` يحتاج فعلياً `entities/user` (النوع `AuthenticatedUser` ودالة `getCurrentUser`) — فوضعه في `shared` يكسر القاعدة. الحل المعتمد في FSD: أي "تجميع/تسليك" (Composition Root) يربط بين طبقات متعددة يعيش في أعلى طبقة (`app`)، لأنها الوحيدة المسموح لها بالاستيراد من كل ما تحتها.
 
 ---
 
-## 4. Loading / Error: كيف تغطي كل الصفحات
+## 4. الـ Auth Shell الحالي
 
-Next.js App Router يطبّق أقرب `loading.tsx` / `error.tsx` من الأعلى إذا لم يوجد ملف خاص بالصفحة نفسها. لذلك:
+- `entities/user/model/types.ts` → نوع `AuthenticatedUser`.
+- `entities/user/api/get-current-user.ts` → ينادي `GET /auth/me` عبر `shared/api/axios-instance`.
+- `entities/user/index.ts` → Public API للـ Entity (انظر [ROLE.md §3.3](ROLE.md)).
+- `app/providers/auth-provider` → يستهلك `entities/user` عبر `useQuery` ويوفر `useAuth()`.
+- `features/logout/model/use-logout.ts` → Hook حقيقي (`useLogout()`) يستدعي `POST /auth/logout` ثم يحوّل لصفحة الدخول — يستهلكه `widgets/navbar`.
+- `middleware.ts` → يتحقق فقط من **وجود** كوكي `access_token` (UX redirect سريع، من `shared/auth/session.types.ts`) — التحقق الحقيقي من الصلاحية يبقى من مسؤولية Backend دائماً.
+- تسجيل الدخول الفعلي (Form + Zod + Mutation) يُبنى لاحقاً داخل `features/login` حسب خارطة الطريق ([ROLE.md §26 Feature Lifecycle](ROLE.md)).
+
+---
+
+## 5. Loading / Error: كيف تغطي كل الصفحات
 
 - `src/app/(protected)/loading.tsx` و `error.tsx` يغطّيان تلقائياً: `dashboard`, `documents`, `conversations`, `settings`.
 - `src/app/login/loading.tsx` و `error.tsx` خاصان بصفحة الدخول فقط (Layout مختلف، بدون Sidebar).
 - `src/app/loading.tsx` يُستخدم فقط للمستوى الجذري (نادراً، لأن `/` يحوّل فوراً).
-- `src/app/global-error.tsx` يغطي أي خطأ فادح يكسر الـ Root Layout نفسه (يحتاج `<html>/<body>` خاصين به وفق متطلبات Next.js).
+- `src/app/global-error.tsx` يغطي أي خطأ فادح يكسر الـ Root Layout نفسه.
 
-عند إضافة صفحة جديدة داخل `(protected)` لا حاجة لإضافة `loading.tsx`/`error.tsx` إلا إذا احتجت حالة مختلفة عن الافتراضية.
+عند إضافة View جديدة داخل `(protected)` لا حاجة لإضافة `loading.tsx`/`error.tsx` إلا إذا احتجت حالة مختلفة عن الافتراضية.
 
 ---
 
-## 5. نظام الألوان — ملخص الاستخدام العملي
+## 6. نظام الألوان — ملخص الاستخدام العملي
 
 التفاصيل الكاملة في [COLORS.md](COLORS.md). للاستخدام اليومي في الكود:
 
 ```tsx
 <div className="bg-background text-foreground" />      // خلفية/نص أساسي
 <Button className="bg-primary text-primary-foreground" /> // أساسي (Indigo)
-<span className="bg-ai text-ai-foreground" />            // عناصر AI فقط (Teal) — modules/ai, modules/conversations
+<span className="bg-ai text-ai-foreground" />            // عناصر AI فقط (Teal) — entities/ai-model, entities/conversation وما يتصل بهما
 <p className="text-success" />                           // نجاح
 <p className="text-destructive" />                        // خطأ/حذف
 ```
@@ -111,36 +138,35 @@ Next.js App Router يطبّق أقرب `loading.tsx` / `error.tsx` من الأع
 
 ---
 
-## 6. قواعد لأي Module جديد (تذكير سريع)
+## 7. قواعد لأي Slice جديد (تذكير سريع)
 
-عند بناء أي Module (auth, documents...) اتبع هيكلية [ROLE.md §4.2](ROLE.md):
+عند بناء أي Feature/Entity جديد اتبع [ROLE.md §3.4 و §26 Feature Lifecycle](ROLE.md):
 
 ```text
-modules/<name>/
-├── api/          ← كل نداءات Backend (Axios عبر infrastructure/api/axios-instance)
-├── components/   ← مكونات خاصة بالـ Module فقط
-├── hooks/        ← useQuery / useMutation تستهلك api/
-├── store/        ← Zustand فقط إذا وُجدت حالة UI محلية (لا تخزّن بيانات Backend هنا)
-├── types/
-├── validations/  ← Zod Schemas + React Hook Form
-└── index.ts
+slice/
+├── ui/        ← مكوّن React (Smart Component يستهلك model/)
+├── model/     ← Hooks (useQuery/useMutation)، Types، Zod Schemas
+├── api/       ← نداءات Backend (Axios عبر shared/api/axios-instance)
+├── lib/       ← Helpers محلية للـ Slice فقط (نادر)
+└── index.ts   ← Public API (Export فقط ما يُستخدم خارج الـ Slice)
 ```
 
-- لا يستورد Module آخر مباشرة — التواصل عبر App Layer أو Shared Types فقط.
-- أي Query/Mutation يجب أن تعرض Loading + Error + Empty State بشكل واضح.
+- لا استيراد بين Slices في نفس الطبقة — التواصل عبر طبقة أعلى (`widgets`/`views`) أو عبر `app` (تجميع نهائي).
+- لا استيراد إلا عبر `index.ts` للـ Slice الآخر (Public API).
+- أي Query/Mutation يجب أن تعرض Loading + Error + Empty State بشكل واضح ([ROLE.md §20](ROLE.md)).
 - ممنوع `any` (مفروض الآن عبر ESLint كقاعدة `error`).
+- راجع [ROLE.md §30 Definition of Done](ROLE.md) قبل اعتبار أي Feature منتهياً.
 
 ---
 
-## 7. التحقق (Verified)
+## 8. التحقق (Verified)
 
-تم التأكد من نجاح الأساس عبر:
+تم التأكد من نجاح الهجرة الكاملة إلى FSD عبر:
 
 ```bash
 pnpm exec tsc --noEmit   # ✅ بدون أخطاء
 pnpm lint                # ✅ بدون أخطاء
-pnpm format              # ✅ Prettier (+ ترتيب كلاسات Tailwind تلقائياً)
-pnpm build                # ✅ Build إنتاجي ناجح (Next.js 16, Turbopack)
+pnpm build                # ✅ Build إنتاجي ناجح (Next.js 16, Turbopack) — كل الـ Routes تعمل
 ```
 
-> ملاحظة تقنية: Next.js 16 بدأ يُهمل (deprecate) تسمية `middleware.ts` لصالح `proxy.ts` (نفس الوظيفة، تسمية جديدة فقط). أبقينا `middleware.ts` حالياً لأن [ROLE.md](ROLE.md) يذكرها صراحةً، والملف يعمل بدون مشاكل — أي تغيير تسمية يحتاج موافقة Architect المشروع حسب [ROLE.md §18](ROLE.md).
+> ملاحظة تقنية: Next.js 16 بدأ يُهمل (deprecate) تسمية `middleware.ts` لصالح `proxy.ts` (نفس الوظيفة، تسمية جديدة فقط). أبقينا `middleware.ts` حالياً لأن [ROLE.md](ROLE.md) يذكرها صراحةً، والملف يعمل بدون مشاكل — أي تغيير تسمية يحتاج موافقة Architect المشروع حسب [ROLE.md §32 Forbidden Changes](ROLE.md).

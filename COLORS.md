@@ -99,7 +99,7 @@
 --color-ai-foreground → white
 ```
 
-يُستخدم فقط داخل `modules/ai` و `modules/conversations` (شارات AI، فقاعات الدردشة، أيقونات المساعد) — عبر كلاس Tailwind: `bg-ai`, `text-ai`, `border-ai`.
+يُستخدم فقط داخل Slices المرتبطة بالذكاء الاصطناعي والمحادثات (`entities/ai-model`, `entities/conversation`, `entities/message`, `features/send-message`, `widgets/conversation-panel`) — شارات AI، فقاعات الدردشة، أيقونات المساعد — عبر كلاس Tailwind: `bg-ai`, `text-ai`, `border-ai`.
 
 الألوان الوظيفية الإضافية (`success`, `warning`, `info`) مُعرّفة أيضاً كتوكنات مخصصة بنفس الطريقة: `bg-success`, `bg-warning`, `bg-info`.
 

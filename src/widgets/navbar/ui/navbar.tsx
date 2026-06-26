@@ -1,7 +1,6 @@
 "use client";
 
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/shared/ui/button";
 import {
@@ -12,21 +11,13 @@ import {
 } from "@/shared/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
 import { useSidebarStore } from "@/shared/hooks/use-sidebar-store";
-import { useAuth } from "@/providers/auth-provider/auth-provider";
-import { axiosInstance } from "@/infrastructure/api/axios-instance";
+import { useAuth } from "@/app/providers/auth-provider/auth-provider";
+import { useLogout } from "@/features/logout";
 
 export function Navbar() {
   const toggleSidebar = useSidebarStore((state) => state.toggle);
   const { user } = useAuth();
-  const router = useRouter();
-
-  async function handleLogout() {
-    try {
-      await axiosInstance.post("/auth/logout");
-    } finally {
-      router.replace("/login");
-    }
-  }
+  const handleLogout = useLogout();
 
   return (
     <header className="border-border bg-background sticky top-0 z-30 flex h-14 items-center justify-between border-b px-4">

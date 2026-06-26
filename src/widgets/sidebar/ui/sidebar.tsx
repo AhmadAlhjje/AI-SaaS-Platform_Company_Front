@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_ITEMS } from "@/shared/constants/nav-items";
+import { NAV_ITEMS } from "@/shared/config/nav-items";
 import { useSidebarStore } from "@/shared/hooks/use-sidebar-store";
 import { cn } from "@/shared/lib/utils";
 

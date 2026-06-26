@@ -1,5 +1,5 @@
-import { Sidebar } from "./_components/sidebar";
-import { Navbar } from "./_components/navbar";
+import { Sidebar } from "@/widgets/sidebar";
+import { Navbar } from "@/widgets/navbar";
 
 export default function ProtectedLayout({
   children,
