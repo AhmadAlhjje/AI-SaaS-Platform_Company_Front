@@ -1,12 +1,14 @@
 "use client";
 
 import { Menu, LogOut, User as UserIcon } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
@@ -39,6 +41,11 @@ export function Navbar() {
           </span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem render={<Link href="/profile" />}>
+            <UserIcon className="size-4" />
+            الملف الشخصي
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"
             onSelect={() => {

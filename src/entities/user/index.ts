@@ -1,2 +1,2 @@
-export type { AuthenticatedUser } from "./model/types";
+export type { AuthenticatedUser, CurrentUserApiModel } from "./model/types";
 export { getCurrentUser } from "./api/get-current-user";
