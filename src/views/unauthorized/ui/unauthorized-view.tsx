@@ -10,7 +10,7 @@ export function UnauthorizedView() {
       <p className="text-muted-foreground max-w-sm text-sm">
         لا تملك الصلاحية الكافية لعرض هذه الصفحة. تواصل مع مسؤول حسابك إذا كنت تعتقد أن هذا خطأ.
       </p>
-      <Button render={<Link href="/dashboard" />}>العودة إلى لوحة التحكم</Button>
+      <Button nativeButton={false} render={<Link href="/dashboard" />}>العودة إلى لوحة التحكم</Button>
     </div>
   );
 }
