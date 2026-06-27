@@ -2,7 +2,7 @@
 
 import type { AxiosError } from "axios";
 import { useAiConfiguration } from "@/entities/ai-configuration";
-import { Card, CardContent } from "@/shared/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { PermissionDeniedState } from "@/shared/ui/permission-denied-state";
 import { ServerErrorState } from "@/shared/ui/server-error-state";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -14,13 +14,31 @@ export function AiSettingsSection() {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardContent className="space-y-3 pt-6">
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-9 w-full" />
-          <Skeleton className="h-9 w-1/3" />
-        </CardContent>
-      </Card>
+      <div className="flex flex-col gap-4">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-5 w-40" />
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Skeleton className="h-24 w-full" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-32" />
+              <Skeleton className="h-9 w-32" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <Skeleton className="h-24 w-full" />
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 

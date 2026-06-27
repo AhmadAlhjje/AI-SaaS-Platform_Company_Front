@@ -63,9 +63,9 @@ export function MessageList({
             <Sparkles className="size-4" />
           </div>
           <div className="bg-card border-border flex items-center gap-1 rounded-2xl border px-4 py-2.5">
-            <span className="bg-muted-foreground size-1.5 animate-bounce rounded-full [animation-delay:-0.3s]" />
-            <span className="bg-muted-foreground size-1.5 animate-bounce rounded-full [animation-delay:-0.15s]" />
-            <span className="bg-muted-foreground size-1.5 animate-bounce rounded-full" />
+            <span className="bg-muted-foreground motion-reduce:animate-none size-1.5 animate-bounce rounded-full [animation-delay:-0.3s]" />
+            <span className="bg-muted-foreground motion-reduce:animate-none size-1.5 animate-bounce rounded-full [animation-delay:-0.15s]" />
+            <span className="bg-muted-foreground motion-reduce:animate-none size-1.5 animate-bounce rounded-full" />
           </div>
         </div>
       )}

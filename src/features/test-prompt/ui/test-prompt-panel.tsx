@@ -48,7 +48,11 @@ export function TestPromptPanel({ systemPrompt, model, temperature, maxTokens }:
           disabled={!question.trim() || testPromptMutation.isPending}
           onClick={handleTest}
         >
-          {testPromptMutation.isPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+          {testPromptMutation.isPending ? (
+            <Loader2 className="motion-reduce:animate-none size-4 animate-spin" />
+          ) : (
+            <Sparkles className="size-4" />
+          )}
           اختبار
         </Button>
 

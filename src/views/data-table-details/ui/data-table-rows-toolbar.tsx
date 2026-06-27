@@ -1,11 +1,18 @@
 "use client";
 
 import { Search } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import type { DataTableColumn, RowFilter } from "@/entities/data-table";
-import { Input } from "@/shared/ui/input";
 import { useDebounce } from "@/shared/hooks/use-debounce";
-import { DataTableFilterBuilder } from "./data-table-filter-builder";
+import { Input } from "@/shared/ui/input";
+import { Skeleton } from "@/shared/ui/skeleton";
+
+// محمَّل عبر next/dynamic لأنه ليس ظاهراً في أول رسم للصفحة (ROLE.md §16)
+const DataTableFilterBuilder = dynamic(
+  () => import("./data-table-filter-builder").then((mod) => mod.DataTableFilterBuilder),
+  { ssr: false, loading: () => <Skeleton className="h-9 w-full" /> },
+);
 
 interface DataTableRowsToolbarProps {
   columns: DataTableColumn[];

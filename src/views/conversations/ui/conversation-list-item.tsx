@@ -81,6 +81,7 @@ export function ConversationListItem({ conversation, isSelected, onSelect, onDel
     <li className="group relative">
       <button
         type="button"
+        aria-current={isSelected ? "true" : undefined}
         onClick={() => onSelect(conversation.id)}
         className={cn(
           "hover:bg-muted/50 flex w-full flex-col gap-0.5 p-3 pe-16 text-start transition-colors",

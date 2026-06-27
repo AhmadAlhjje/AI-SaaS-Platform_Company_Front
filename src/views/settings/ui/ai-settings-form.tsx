@@ -1,17 +1,24 @@
 "use client";
 
 import { Loader2, Save } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { AiConfiguration } from "@/entities/ai-configuration";
 import { AI_MODEL_OPTIONS } from "@/entities/ai-model";
 import { ResetSettingsButton } from "@/features/reset-ai-settings";
-import { TestPromptPanel } from "@/features/test-prompt";
 import { useUpdateAiConfiguration } from "@/features/update-settings";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { Skeleton } from "@/shared/ui/skeleton";
 import { Textarea } from "@/shared/ui/textarea";
+
+// محمَّل عبر next/dynamic لأنه ليس ظاهراً في أول رسم للصفحة (ROLE.md §16)
+const TestPromptPanel = dynamic(() => import("@/features/test-prompt").then((mod) => mod.TestPromptPanel), {
+  ssr: false,
+  loading: () => <Skeleton className="h-40 w-full" />,
+});
 
 const SELECT_CLASS =
   "border-input bg-background h-9 rounded-lg border px-3 text-sm shadow-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";

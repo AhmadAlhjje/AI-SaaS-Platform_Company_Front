@@ -4,6 +4,7 @@ import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import type { DataTableColumn, RowFilter, RowFilterOperator } from "@/entities/data-table";
 import { ROW_FILTER_OPERATOR_LABEL, ROW_FILTER_OPERATORS } from "@/entities/data-table";
+import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -49,8 +50,13 @@ export function DataTableFilterBuilder({ columns, filters, onChange }: DataTable
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <select className={SELECT_CLASS} value={column} onChange={(event) => setColumn(event.target.value)}>
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+        <select
+          aria-label="العمود"
+          className={cn(SELECT_CLASS, "w-full sm:w-auto")}
+          value={column}
+          onChange={(event) => setColumn(event.target.value)}
+        >
           {columns.map((item) => (
             <option key={item.name} value={item.name}>
               {item.name}
@@ -58,7 +64,8 @@ export function DataTableFilterBuilder({ columns, filters, onChange }: DataTable
           ))}
         </select>
         <select
-          className={SELECT_CLASS}
+          aria-label="العملية"
+          className={cn(SELECT_CLASS, "w-full sm:w-auto")}
           value={operator}
           onChange={(event) => setOperator(event.target.value as RowFilterOperator)}
         >
@@ -69,7 +76,12 @@ export function DataTableFilterBuilder({ columns, filters, onChange }: DataTable
           ))}
         </select>
         {selectedColumn?.type === "boolean" ? (
-          <select className={SELECT_CLASS} value={value} onChange={(event) => setValue(event.target.value)}>
+          <select
+            aria-label="القيمة"
+            className={cn(SELECT_CLASS, "w-full sm:w-auto")}
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+          >
             <option value="">اختر قيمة</option>
             <option value="true">نعم</option>
             <option value="false">لا</option>
@@ -78,12 +90,12 @@ export function DataTableFilterBuilder({ columns, filters, onChange }: DataTable
           <Input
             type={selectedColumn?.type === "number" ? "number" : "text"}
             placeholder="القيمة"
-            className="w-40"
+            className="w-full sm:w-40"
             value={value}
             onChange={(event) => setValue(event.target.value)}
           />
         )}
-        <Button variant="outline" size="sm" onClick={handleAdd}>
+        <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={handleAdd}>
           <Plus />
           إضافة فلتر
         </Button>

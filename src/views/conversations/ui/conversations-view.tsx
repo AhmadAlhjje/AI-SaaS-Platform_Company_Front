@@ -3,6 +3,7 @@
 import { MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { useConversations } from "@/entities/conversation";
+import { cn } from "@/shared/lib/utils";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { ChatPanel } from "./chat-panel";
 import { ConversationSidebar } from "./conversation-sidebar";
@@ -10,6 +11,9 @@ import { ConversationSidebar } from "./conversation-sidebar";
 export function ConversationsView() {
   const { data: conversations } = useConversations();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  // على الموبايل تُعرض القائمة أو المحادثة بالتناوب (مساحة شاشة محدودة)؛
+  // على الشاشات الكبيرة تُعرض القائمة والمحادثة معاً دائماً (انظر classes أدناه).
+  const [showChatOnMobile, setShowChatOnMobile] = useState(false);
 
   // Falls back to the most recent conversation until the user explicitly
   // picks one — derived directly instead of synced via an effect.
@@ -17,9 +21,15 @@ export function ConversationsView() {
   const selectedConversation =
     conversations?.find((conversation) => conversation.id === effectiveConversationId) ?? null;
 
+  function handleSelect(conversationId: string) {
+    setSelectedConversationId(conversationId);
+    setShowChatOnMobile(true);
+  }
+
   function handleConversationDeleted(conversationId: string) {
     if (effectiveConversationId === conversationId) {
       setSelectedConversationId(null);
+      setShowChatOnMobile(false);
     }
   }
 
@@ -31,20 +41,28 @@ export function ConversationsView() {
       </div>
 
       <div className="flex flex-1 gap-4 overflow-hidden">
-        <ConversationSidebar
-          selectedConversationId={effectiveConversationId}
-          onSelect={setSelectedConversationId}
-          onDeleted={handleConversationDeleted}
-        />
+        <div className={cn("flex-1 lg:flex-none", showChatOnMobile && "hidden lg:block")}>
+          <ConversationSidebar
+            selectedConversationId={effectiveConversationId}
+            onSelect={handleSelect}
+            onDeleted={handleConversationDeleted}
+          />
+        </div>
 
         {selectedConversation ? (
-          <ChatPanel
-            conversationId={selectedConversation.id}
-            conversationTitle={selectedConversation.title}
-            onCleared={() => setSelectedConversationId(null)}
-          />
+          <div className={cn("min-w-0 flex-1", !showChatOnMobile && "hidden lg:flex")}>
+            <ChatPanel
+              conversationId={selectedConversation.id}
+              conversationTitle={selectedConversation.title}
+              onCleared={() => {
+                setSelectedConversationId(null);
+                setShowChatOnMobile(false);
+              }}
+              onBack={() => setShowChatOnMobile(false)}
+            />
+          </div>
         ) : (
-          <div className="flex flex-1 items-center justify-center">
+          <div className="hidden flex-1 items-center justify-center lg:flex">
             <EmptyState
               icon={MessageSquare}
               title="اختر محادثة أو أنشئ محادثة جديدة"

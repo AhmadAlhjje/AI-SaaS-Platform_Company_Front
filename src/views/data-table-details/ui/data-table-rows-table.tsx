@@ -36,10 +36,19 @@ export function DataTableRowsTable({ dataTableId, columns, params, page, onPageC
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="space-y-2 pt-6">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+        <CardContent className="space-y-3 pt-6">
+          <div className="flex gap-3">
+            {columns.map((column) => (
+              <Skeleton key={column.name} className="h-4 flex-1" />
+            ))}
+          </div>
+          {Array.from({ length: 5 }).map((_, rowIndex) => (
+            <div key={rowIndex} className="flex gap-3">
+              {columns.map((column) => (
+                <Skeleton key={column.name} className="h-8 flex-1" />
+              ))}
+            </div>
+          ))}
         </CardContent>
       </Card>
     );
@@ -81,7 +90,7 @@ export function DataTableRowsTable({ dataTableId, columns, params, page, onPageC
     <div className="flex flex-col gap-4">
       <Card>
         <CardContent className="overflow-x-auto p-0">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-label="صفوف الجدول">
             <thead>
               <tr className="border-border border-b">
                 {columns.map((column) => (

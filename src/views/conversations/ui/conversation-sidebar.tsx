@@ -44,7 +44,7 @@ export function ConversationSidebar({ selectedConversationId, onSelect, onDelete
   }, [conversations, search, sortOrder]);
 
   return (
-    <Card className="flex h-full w-80 shrink-0 flex-col overflow-hidden">
+    <Card className="flex h-full w-full shrink-0 flex-col overflow-hidden lg:w-80">
       <div className="border-border flex flex-col gap-2 border-b p-3">
         <NewConversationButton onCreated={onSelect} />
         <div className="flex items-center gap-1.5">

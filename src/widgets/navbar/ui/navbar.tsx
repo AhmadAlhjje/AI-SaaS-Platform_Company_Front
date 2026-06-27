@@ -23,7 +23,13 @@ export function Navbar() {
 
   return (
     <header className="border-border bg-background sticky top-0 z-30 flex h-14 items-center justify-between border-b px-4">
-      <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggleSidebar}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden"
+        aria-label="فتح القائمة الجانبية"
+        onClick={toggleSidebar}
+      >
         <Menu className="size-5" />
       </Button>
 
