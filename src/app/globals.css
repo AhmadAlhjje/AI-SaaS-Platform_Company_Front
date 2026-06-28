@@ -58,110 +58,110 @@
 }
 
 :root {
-  /* Neutral — Slate */
-  --background: #ffffff;
-  --foreground: #0f172a;
+  /* Neutral — WhatsApp Grays (Light) */
+  --background: #f0f2f5;
+  --foreground: #111b21;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #111b21;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
+  --popover-foreground: #111b21;
 
-  /* Primary — Indigo */
-  --primary: #4f46e5;
+  /* Primary — WhatsApp Teal Green */
+  --primary: #008069;
   --primary-foreground: #ffffff;
 
-  /* Secondary / Accent — neutral hover/selected state (NOT brand Teal, see COLORS.md §7) */
-  --secondary: #f8fafc;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
+  /* Secondary / Accent — neutral hover/selected state (NOT AI Bright Green, see COLORS.md §7) */
+  --secondary: #f0f2f5;
+  --secondary-foreground: #111b21;
+  --muted: #e9edef;
+  --muted-foreground: #667781;
+  --accent: #e9edef;
+  --accent-foreground: #111b21;
 
   /* Semantic */
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --success: #16a34a;
+  --success: #2ba84a;
   --success-foreground: #ffffff;
   --warning: #d97706;
   --warning-foreground: #ffffff;
-  --info: #0284c7;
+  --info: #53bdeb;
   --info-foreground: #ffffff;
 
-  /* AI brand accent — Teal (used only by modules/ai, modules/conversations) */
-  --ai: #14b8a6;
-  --ai-foreground: #ffffff;
+  /* AI brand accent — WhatsApp Bright Green (used only by modules/ai, modules/conversations) */
+  --ai: #25d366;
+  --ai-foreground: #08201a;
 
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #6366f1;
-  --chart-1: #4f46e5;
-  --chart-2: #14b8a6;
-  --chart-3: #0284c7;
+  --border: #e9edef;
+  --input: #e9edef;
+  --ring: #008069;
+  --chart-1: #008069;
+  --chart-2: #25d366;
+  --chart-3: #53bdeb;
   --chart-4: #d97706;
-  --chart-5: #64748b;
+  --chart-5: #667781;
   --radius: 0.625rem;
-  --sidebar: #f8fafc;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #4f46e5;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111b21;
+  --sidebar-primary: #008069;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #6366f1;
+  --sidebar-accent: #e9edef;
+  --sidebar-accent-foreground: #111b21;
+  --sidebar-border: #e9edef;
+  --sidebar-ring: #008069;
 }
 
 .dark {
-  /* Neutral — Slate */
-  --background: #0b0f19;
-  --foreground: #f1f5f9;
-  --card: #111827;
-  --card-foreground: #f1f5f9;
-  --popover: #111827;
-  --popover-foreground: #f1f5f9;
+  /* Neutral — WhatsApp Grays (Dark) */
+  --background: #111b21;
+  --foreground: #e9edef;
+  --card: #202c33;
+  --card-foreground: #e9edef;
+  --popover: #233138;
+  --popover-foreground: #e9edef;
 
-  /* Primary — Indigo */
-  --primary: #6366f1;
-  --primary-foreground: #0b0f19;
+  /* Primary — WhatsApp Teal Green (Dark) */
+  --primary: #00a884;
+  --primary-foreground: #ffffff;
 
   /* Secondary / Accent — neutral hover/selected state */
-  --secondary: #1f2937;
-  --secondary-foreground: #f1f5f9;
-  --muted: #1f2937;
-  --muted-foreground: #94a3b8;
-  --accent: #1f2937;
-  --accent-foreground: #f1f5f9;
+  --secondary: #202c33;
+  --secondary-foreground: #e9edef;
+  --muted: #202c33;
+  --muted-foreground: #8696a0;
+  --accent: #2a3942;
+  --accent-foreground: #e9edef;
 
   /* Semantic */
   --destructive: #f87171;
-  --destructive-foreground: #0b0f19;
-  --success: #4ade80;
-  --success-foreground: #0b0f19;
+  --destructive-foreground: #111b21;
+  --success: #3dd16f;
+  --success-foreground: #111b21;
   --warning: #fbbf24;
-  --warning-foreground: #0b0f19;
-  --info: #38bdf8;
-  --info-foreground: #0b0f19;
+  --warning-foreground: #111b21;
+  --info: #53bdeb;
+  --info-foreground: #111b21;
 
-  /* AI brand accent — Teal */
-  --ai: #2dd4bf;
-  --ai-foreground: #0b0f19;
+  /* AI brand accent — WhatsApp Bright Green */
+  --ai: #25d366;
+  --ai-foreground: #0b141a;
 
-  --border: #1f2937;
-  --input: #1f2937;
-  --ring: #818cf8;
-  --chart-1: #6366f1;
-  --chart-2: #2dd4bf;
-  --chart-3: #38bdf8;
+  --border: #2a3942;
+  --input: #2a3942;
+  --ring: #00a884;
+  --chart-1: #00a884;
+  --chart-2: #25d366;
+  --chart-3: #53bdeb;
   --chart-4: #fbbf24;
-  --chart-5: #94a3b8;
-  --sidebar: #111827;
-  --sidebar-foreground: #f1f5f9;
-  --sidebar-primary: #6366f1;
-  --sidebar-primary-foreground: #0b0f19;
-  --sidebar-accent: #1f2937;
-  --sidebar-accent-foreground: #f1f5f9;
-  --sidebar-border: #1f2937;
-  --sidebar-ring: #818cf8;
+  --chart-5: #8696a0;
+  --sidebar: #202c33;
+  --sidebar-foreground: #e9edef;
+  --sidebar-primary: #00a884;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2a3942;
+  --sidebar-accent-foreground: #e9edef;
+  --sidebar-border: #2a3942;
+  --sidebar-ring: #00a884;
 }
 
 @layer base {

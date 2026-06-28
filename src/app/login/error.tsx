@@ -10,10 +10,12 @@ export default function LoginError({
   reset: () => void;
 }) {
   return (
-    <div className="w-full max-w-sm space-y-3 text-center">
-      <h2 className="text-foreground text-lg font-semibold">تعذر تحميل صفحة الدخول</h2>
-      <p className="text-muted-foreground text-sm">{error.message || "يرجى المحاولة مرة أخرى."}</p>
-      <Button onClick={reset}>إعادة المحاولة</Button>
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-sm space-y-3 text-center">
+        <h2 className="text-foreground text-lg font-semibold">تعذر تحميل صفحة الدخول</h2>
+        <p className="text-muted-foreground text-sm">{error.message || "يرجى المحاولة مرة أخرى."}</p>
+        <Button onClick={reset}>إعادة المحاولة</Button>
+      </div>
     </div>
   );
 }
